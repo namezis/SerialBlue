@@ -4,7 +4,9 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -155,6 +157,11 @@ public class MainActivity extends Activity implements SensorEventListener {
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
+        String deviceName = settings.getString("deviceName", "");
+        if (!deviceName.isEmpty()) {
+        	mBluetooth.connect(deviceName);
+        }
     }
 
     protected void onPause() {
@@ -179,7 +186,13 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	if (item.getGroupId() == GROUP_DEVICES) {
-    		mBluetooth.connect(item.getTitle().toString());
+    		String deviceName = item.getTitle().toString();
+    		if (mBluetooth.connect(deviceName)) {
+    			SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
+    			SharedPreferences.Editor editor = settings.edit();
+    		    editor.putString("deviceName", deviceName);
+    		    editor.commit();
+    		}
     	}
     	else {
             switch (item.getItemId()) {

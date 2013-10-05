@@ -23,6 +23,7 @@ public class Bluetooth {
 	InputStream mRead = null;
 	boolean mEnabled = false;
 	Thread mReaderThread = null;
+	List<String> mReceivedLines = new ArrayList<String>();
 	
 	Boolean init(Activity activity) {
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -62,9 +63,27 @@ public class Bluetooth {
             try {
                 System.out.println("Reading...");
                 byte[] buffer = new byte[64];
+                int offset = 0;
                 while (true) {
-                	int bytesRead = mRead.read(buffer);
-                	System.out.println(new String(buffer, 0, bytesRead));
+                	System.out.println("Reading from " + offset); 
+                	int bytesRead = mRead.read(buffer, offset, buffer.length - offset);
+                	System.out.println("Read " + new String(buffer, offset, bytesRead) + " = " + bytesRead + " bytes");
+                	offset += bytesRead;
+                	for (int i = offset - bytesRead; i < offset; ++i) {
+                		if (buffer[i] == '\r' || buffer[i] == '\n') {
+                        	System.out.println("Found linefeed at " + i);
+                			int left = offset - i - 1;
+                        	System.out.println("Leaving " + left + " for next line");
+                			String line = new String(buffer, 0, i);
+                			mReceivedLines.add(line);
+                        	System.out.println(line);
+                			for (int j = 0; j < left; ++j) {
+                				buffer[j] = buffer[i + j + 1];
+                			}
+                			offset = left;
+                			break;
+                		}
+                	}
                 }
             } catch (IOException e) {
                 System.err.println("Connection closed.");
