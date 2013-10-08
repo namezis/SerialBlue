@@ -9,8 +9,8 @@
     tools:context=".MainActivity" >
 
     <TextView
-        android:id="@+id/textAccel"
-        android:layout_width="wrap_content"
+        android:id="@+id/accelValue"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="Accel"
@@ -20,11 +20,24 @@
         android:id="@+id/bluetoothOutput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textAccel"
+        android:layout_alignLeft="@+id/accelValue"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/textAccel"
+        android:layout_below="@+id/accelValue"
+        android:maxLines="20"
         android:minLines="20"
-        android:text="Small Text"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical|horizontal"
+        android:text="Output:"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/startCarController"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="startCarController"
+        android:text="Car" />
 
 </RelativeLayout>
