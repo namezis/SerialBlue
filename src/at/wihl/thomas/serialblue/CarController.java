@@ -61,17 +61,22 @@ public class CarController extends Activity {
     	{
     		if (r.contains(x, y))
     		{
-    			int speed = 100 - 200 * (y - r.top) / r.height();
-    			Globals.mBluetooth.write("MO0" + Integer.toHexString(speed) + "\n");
+    			int speed = 100 - 250 * (y - r.top) / r.height();
+    			if (speed > 100) speed = 100;
+    			else if (speed < -100) speed = -100;
+    			else if (speed < 20 && speed > -20) speed = 0;
+    			Globals.mBluetooth.write("motor 0 " + speed + "\n");
     		}
     	}
     	if (mLeds.getGlobalVisibleRect(r))
     	{
     		if (r.contains(x, y))
     		{
-    			int brightness = 100 - 100 * (y - r.top) / r.height();
+    			int brightness = 112 - 125 * (y - r.top) / r.height();
+    			if (brightness < 0) brightness = 0;
+    			else if (brightness > 100) brightness = 100;
     			int index = 16 * (x - r.left) / r.width();
-    			Globals.mBluetooth.write("LE" + Integer.toHexString(index) + Integer.toHexString(brightness) + "\n");
+    			Globals.mBluetooth.write("led " + index + " " + brightness + "\n");
     		}
     	}
 
